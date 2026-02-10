@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAN & Aadhaar Linking Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 650px;
+            width: 100%;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        .icon-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px dashed #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #667eea;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 14px;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .button-secondary {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+        }
+
+        .button-secondary:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #dee2e6;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            color: #999;
+            font-size: 13px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+
+        .info-box p {
+            color: #0c5460;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .feature-list li::before {
+            content: "✓ ";
+            color: #38ef7d;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            display: none;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .progress-section.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .progress-header {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .progress-text {
+            color: #856404;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .result-section {
+            display: none;
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .result-header {
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .error-section {
+            display: none;
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .error-section.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .error-text {
+            color: #721c24;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="icon-container">
+            <div class="icon">📋</div>
+        </div>
+
+        <div class="header">
+            <h1>PAN-Aadhaar Linking Checker</h1>
+            <p>Upload your CSV file to verify PAN-Aadhaar linkage status</p>
+        </div>
+
+        <!-- CSV Upload Form -->
+        <div class="form-section">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <label>📁 Select CSV File</label>
+                <input type="file" id="csvFile" name="csv_file" accept=".csv" required>
+                <button class="button" type="submit" id="uploadBtn">🚀 Upload & Process</button>
+            </form>
+        </div>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <!-- CSV Template Download -->
+        <form action="/download-template" method="GET">
+            <button class="button button-secondary" type="submit">
+                ⬇️ Download CSV Template
+            </button>
+        </form>
+
+        <!-- Progress Section -->
+        <div class="progress-section" id="progressSection">
+            <div class="progress-header">⏳ Processing Your File...</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+            <div class="progress-text" id="progressText">Initializing...</div>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result-section" id="resultSection">
+            <div class="result-header">✅ Processing Completed!</div>
+            <div class="result-stats" id="resultStats"></div>
+            <button class="button button-secondary" onclick="downloadResult()" id="downloadBtn">
+                ⬇️ Download Results
+            </button>
+        </div>
+
+        <!-- Error Section -->
+        <div class="error-section" id="errorSection">
+            <div class="error-text" id="errorText"></div>
+        </div>
+
+        <div class="info-box">
+            <p><strong>ℹ️ Template Information:</strong></p>
+            <ul class="feature-list">
+                <li>CSV must contain PAN and Aadhaar columns</li>
+                <li>PAN format: 10 alphanumeric characters (e.g., ABCDE1234F)</li>
+                <li>Aadhaar format: 12-digit number</li>
+                <li>Maximum 10 entries per upload</li>
+                <li>Processing takes 30-60 seconds per entry</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let currentJobId = null;
+        let statusCheckInterval = null;
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('csvFile');
+            const uploadBtn = document.getElementById('uploadBtn');
+            
+            if (!fileInput.files[0]) {
+                alert('Please select a CSV file');
+                return;
+            }
+
+            // Hide previous results/errors
+            document.getElementById('resultSection').classList.remove('show');
+            document.getElementById('errorSection').classList.remove('show');
+            
+            // Show progress section
+            document.getElementById('progressSection').classList.add('show');
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressBar').textContent = '0%';
+            document.getElementById('progressText').textContent = 'Uploading file...';
+            
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '⏳ Processing... <div class="spinner"></div>';
+
+            const formData = new FormData();
+            formData.append('csv_file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentJobId = data.job_id;
+                    checkStatus();
+                } else {
+                    showError(data.error || 'Failed to process file');
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '🚀 Upload & Process';
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '🚀 Upload & Process';
+            }
+        });
+
+        async function checkStatus() {
+            if (!currentJobId) return;
+
+            try {
+                const response = await fetch(`/status/${currentJobId}`);
+                const data = await response.json();
+
+                if (data.status === 'processing') {
+                    const progress = data.total > 0 ? (data.progress / data.total) * 100 : 0;
+                    document.getElementById('progressBar').style.width = progress + '%';
+                    document.getElementById('progressBar').textContent = Math.round(progress) + '%';
+                    document.getElementById('progressText').textContent = data.message || 'Processing...';
+                    
+                    setTimeout(checkStatus, 2000);
+                } else if (data.status === 'completed') {
+                    document.getElementById('progressBar').style.width = '100%';
+                    document.getElementById('progressBar').textContent = '100%';
+                    document.getElementById('progressText').textContent = 'Completed!';
+                    
+                    setTimeout(() => {
+                        document.getElementById('progressSection').classList.remove('show');
+                        showResults(data);
+                    }, 1000);
+                } else if (data.status === 'error') {
+                    document.getElementById('progressSection').classList.remove('show');
+                    showError(data.message || 'Processing failed');
+                }
+
+                document.getElementById('uploadBtn').disabled = false;
+                document.getElementById('uploadBtn').innerHTML = '🚀 Upload & Process';
+            } catch (error) {
+                showError('Failed to check status: ' + error.message);
+                document.getElementById('uploadBtn').disabled = false;
+                document.getElementById('uploadBtn').innerHTML = '🚀 Upload & Process';
+            }
+        }
+
+        function showResults(data) {
+            const results = data.results || [];
+            const total = results.length;
+            const success = results.filter(r => r.status === 'Success').length;
+            const linked = results.filter(r => r.link_status === 'Already Linked' || r.link_status === 'Linked').length;
+            const notLinked = results.filter(r => r.link_status === 'Not Linked').length;
+
+            const statsHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${total}</div>
+                    <div class="stat-label">Total Processed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${success}</div>
+                    <div class="stat-label">Successful</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${linked}</div>
+                    <div class="stat-label">Linked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${notLinked}</div>
+                    <div class="stat-label">Not Linked</div>
+                </div>
+            `;
+
+            document.getElementById('resultStats').innerHTML = statsHTML;
+            document.getElementById('resultSection').classList.add('show');
+        }
+
+        function showError(message) {
+            document.getElementById('progressSection').classList.remove('show');
+            document.getElementById('errorText').textContent = '❌ ' + message;
+            document.getElementById('errorSection').classList.add('show');
+        }
+
+        function downloadResult() {
+            if (currentJobId) {
+                window.location.href = `/download-result/${currentJobId}`;
+            }
+        }
+    </script>
+
+</body>
+</html>
