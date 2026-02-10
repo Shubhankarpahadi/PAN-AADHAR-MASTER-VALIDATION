@@ -1,0 +1,4 @@
+entry_num,pan,aadhaar,status,link_status,message,timestamp
+1,BZRPG5874R,344257370224,Success,Already Linked,Your PAN BZXXXXXX4R is already linked to given Aadhaar 34XXXXXXXX24,2026-02-09 00:29:34
+2,DDPPP9410J,734474810142,Success,Unknown,PAN *,2026-02-09 00:30:51
+3,EHMPP2260J,304923678343,Success,Unknown,PAN *,2026-02-09 00:32:24

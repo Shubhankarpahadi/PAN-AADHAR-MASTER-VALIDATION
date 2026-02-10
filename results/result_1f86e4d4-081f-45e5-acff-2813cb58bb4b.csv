@@ -1,0 +1,27 @@
+entry_num,pan,aadhaar,status,link_status,message,timestamp
+1,COPPS9926E,296645000000.0,Success,Unknown,PAN *,2025-11-21 21:41:20
+2,ADYPA4728N,472950000000.0,Failed,N/A,"Error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xdf4103
+	0xdf4144
+	0xbfe56b
+	0xc3ce58
+	0xc6c7c6
+	0xc68030
+	0xc67563
+	0xbce4dd
+	0xbcea6e
+	0xbcef3d
+	0x10657b4
+	0x106098a
+	0xe1c392
+	0xe0c4c8
+	0xe1324d
+	0xbce193
+	0xbcd848
+	0x11bb0cf
+	0x77145d49
+	0x77c2d6db
+	0x77c2d661
+",2025-11-21 21:43:02
